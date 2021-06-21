@@ -5,7 +5,7 @@ import time
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 # Input files where converted to '.txt' because '.in' did not work.
-# Thus it seemed better to include the adapted input files in the git.
+# Thus, it seemed better to include the adapted input files in the git.
 matrix1_path = os.path.join(THIS_FOLDER, '1.txt')
 matrix2_path = os.path.join(THIS_FOLDER, '2.txt')
 matrix3_path = os.path.join(THIS_FOLDER, '3.txt')
