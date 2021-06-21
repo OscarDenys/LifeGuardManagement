@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import time
 import math
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
@@ -14,67 +15,45 @@ matrix8_path = os.path.join(THIS_FOLDER, '8.txt')
 matrix9_path = os.path.join(THIS_FOLDER, '9.txt')
 matrix10_path = os.path.join(THIS_FOLDER, '10.txt')
 
-# load matrices
-matrix1 = np.loadtxt(matrix1_path, dtype=int)
-matrix2 = np.loadtxt(matrix2_path, dtype=int)
-matrix3 = np.loadtxt(matrix3_path, dtype=int)
-matrix4 = np.loadtxt(matrix4_path, dtype=int)
-matrix5 = np.loadtxt(matrix5_path, dtype=int)
-matrix6 = np.loadtxt(matrix6_path, dtype=int)
-matrix7 = np.loadtxt(matrix7_path, dtype=int)
-matrix8 = np.loadtxt(matrix8_path, dtype=int)
-matrix9 = np.loadtxt(matrix9_path, dtype=int)
-matrix10 = np.loadtxt(matrix10_path, dtype=int)
-
-print('matrices are loaded')
-
-
-def find_next_a(mat, a, loss):
-    overlap = mat[(mat[:, 1] >= a) & (mat[:, 0] < a)]
-    #print(overlap)
-    while overlap.size != 0:
-        loss.append(a - max(overlap[:, 0]))
-        a = min(overlap[:, 0])
-        overlap = mat[(mat[:, 1] >= a) & (mat[:, 0] < a)]
-        #print(overlap)
-    return a
-
-
-def find_next_b(mat, a):
-    mat = mat[(mat[:, 1] < a)]
-    return max(mat[:, 1])
-
-
-# check case of complete overlap
 
 
 def fire_lifeguard(mat):
-    loss = []
+    min_loss = 1000000000
     covered_time = 0
-    b = max(mat[:, 1])
-    a = mat[np.argmax(mat[:, 1]), 0]
-    # print(mat)
-    while mat.size != 0:
-        find_next_a(mat, a, loss)
-        covered_time += (b - a)
-        mat = mat[(mat[:, 1] < a)]
-        if mat.size != 0:
-            b = max(mat[:, 1])
-            a = mat[np.argmax(mat[:, 1]), 0]
-            # print(mat)
-
+    mat = np.sort(mat, axis=0)
+    (a1, b1) = mat[0, :]
+    # print(a1, b1)
+    for i in range(mat.shape[0]-1):
+        a2 = mat[i + 1, 0]
+        b2 = mat[i+1, 1]
+        if b2 <= b1:
+            min_loss = 0
+            print(b1, b2)
+            continue
+        elif a2 <= b1:
+            b1 = b2
+            if (b2 - b1) < min_loss:
+                min_loss = b2 - b1
+        else:
+            covered_time += (b1 - a1)
+            a1 = a2
+            b1 = b2
+    if covered_time == 0:
+        covered_time = b1 - a1 - min_loss
+    else:
+        covered_time = max(0, covered_time-min_loss)
+    print(min_loss)
     print(covered_time)
-    print(min(loss))
 
 
 
 
+matrix = np.loadtxt(matrix1_path, dtype=int)
+# print(matrix.shape[0])
 
-
-
-
-fire_lifeguard(c)
-
-
+t0 = time.time()
+fire_lifeguard(matrix)
+t1 = time.time()
+print('runtime: ', (t1 - t0))
 
 
