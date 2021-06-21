@@ -23,17 +23,18 @@ matrix1 = matrix1.reshape((nb_pairs1, 2))
 
 def find_next_a(mat, a, loss):
     overlap = mat[(mat[:, 1] >= a) & (mat[:, 0] < a)]
-    print(overlap)
+    #print(overlap)
     while overlap.size != 0:
         loss.append(a - max(overlap[:, 0]))
         a = min(overlap[:, 0])
         overlap = mat[(mat[:, 1] >= a) & (mat[:, 0] < a)]
-        print(overlap)
+        #print(overlap)
     return a
 
 
 def find_next_b(mat, a):
-    
+    mat = mat[(mat[:, 1] < a)]
+    return max(mat[:, 1])
 
 
 # check case of complete overlap
@@ -43,12 +44,16 @@ def fire_lifeguard(mat):
     loss = []
     covered_time = 0
     b = max(mat[:, 1])
-    b_row_ind = np.argmax(mat[:, 1])
-    a = mat[b_row_ind, 0]
-    #  print(b, b_ind, a)
+    a = mat[np.argmax(mat[:, 1]), 0]
+    while mat.size != 0:
+        find_next_a(mat, a, loss)
+        covered_time += (b - a)
+        mat = mat[(mat[:, 1] < a)]
+        b = max(mat[:, 1])
+        a = mat[np.argmax(mat[:, 1]), 0]
+        print(mat)
 
-    a = find_next_a(mat, a, loss)
-    covered_time += (b - a)
+
 
 
 
