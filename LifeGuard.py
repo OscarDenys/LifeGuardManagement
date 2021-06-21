@@ -45,13 +45,15 @@ def fire_lifeguard(mat):
     covered_time = 0
     b = max(mat[:, 1])
     a = mat[np.argmax(mat[:, 1]), 0]
+    print(mat)
     while mat.size != 0:
         find_next_a(mat, a, loss)
         covered_time += (b - a)
         mat = mat[(mat[:, 1] < a)]
-        b = max(mat[:, 1])
-        a = mat[np.argmax(mat[:, 1]), 0]
-        print(mat)
+        if mat.size != 0:
+            b = max(mat[:, 1])
+            a = mat[np.argmax(mat[:, 1]), 0]
+            print(mat)
 
 
 
